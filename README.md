@@ -46,7 +46,7 @@ For highway take-over:
 
 # How do we choose training parameters?
 
-You may ask why we choose 4-layer NN for drone racing but 3-layer NN for highway driving? Part of the reason is because drone racing has more constraints. It requires a more complex NN to approximate its value function. There is no rule of thumb for choosing the best network structure because answering this question is as hard as proving the convergence of deep RL, which seems challenging in practice when we have limited knowledge of the ground truth value function. From our **three-year** reachability learning project experience, we found the following heuristic seems working: 
+You may ask why we choose 4-layer NN for drone racing but 3-layer NN for highway driving? Part of the reason is because drone racing has more constraints. It requires a more complex NN to approximate its value function. There is no rule of thumb for choosing the best network structure because answering this question is as hard as finding conditions to ensure the convergence of deep RL, which seems challenging in practice when we have limited knowledge of the ground truth value function. From our **three-year** reachability learning project experience, we found the following heuristic seems working: 
 
 (1) First, we over-parameterize the NN Q functions and NN policies such that we can bring the critic loss down, which measures the Bellman equation fitting error;
 (2) Subsequently, we want to mitigate overfitting by shrinking the size of neural networks, but maintaining small critic loss, because otherwise, the representation power of NN is not enough to capture the complex structure of value function;
