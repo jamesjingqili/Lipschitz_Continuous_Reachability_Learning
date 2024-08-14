@@ -20,6 +20,7 @@ In addition, our method can be used offline for a comprehensive certification, i
 
 We adapt max-min DDPG and max-min SAC to learn our new reach-avoid value function. Our implementation builds upon the deep RL infrastructure of [Tianshou](https://github.com/thu-ml/tianshou) (version 0.5.1).  
 
+We recommend Python version 3.12. 
 
 Install instruction:
 
