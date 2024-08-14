@@ -1,8 +1,9 @@
 ## Lipschitz Continuous Reachability Learning (LCRL)
 
-# Introduction
+This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. 
 
-This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using deep RL
+
+# Introduction
 
 We proposed a new reach-avoid value function, which is Lipschitz continuous, and its Bellman equation is a contraction mapping. Our method does not need to anneal the time discount factor to 1, which is commonly used in prior works. We also introduce two post-learning reach-avoid set certification methods for verifying if a set of states is within the ground truth reach-avoid set.
 
@@ -32,4 +33,11 @@ Install instruction:
 4. run in terminal: conda install -c conda-forge ffmpeg
 
 
+
+# Limitation and future directions:
+In the certification part of our work, we begin by exploring the use of Lipschitz continuity and the learned control policy to construct a theoretical lower bound for the ground truth reach-avoid value function, which is typically unknown and difficult to compute for high-dimensional systems. However, we believe there are several avenues to improve this theoretical lower bound. For instance, the critic loss in max-min DDPG approximately reflects the magnitude of the value function fitting error. This raises a natural question: can we utilize critic loss information to construct a high-confidence lower bound for the ground truth value function? While this may require a detailed sample complexity analysis, the Lipschitz continuity of the value function could be advantageous. We believe this approach holds promise for developing a tighter lower bound on the ground truth value function, ultimately enabling the recovery of trustworthy reach-avoid sets in high-dimensional problems. Deriving a tight deterministic lower bound of the ground truth value function would be even more compelling, though this might necessitate substantial prior knowledge, such as the controllability and stability of the dynamical systems involved in reach-avoid problems.
+
+Moreover, our real-time SOCP certification heavily relies on the Clarabel QP solver. The current implementation does not exploit the structure of these SOCPs when evaluating worst-case constraint violations and target set reachability. Therefore, we see significant opportunities to enhance our SOCP trajectory-level certification methods for faster computation and reduced conservatism. For example, could agents leverage decentralized SOCP solvers to collaboratively verify their joint safety in complex traffic scenarios? Additionally, how can we harness the sparsity structure of dynamics to simplify SOCP computations?
+
+Overall, we are optimistic that in the near future, we will be able to compute trustworthy reach-avoid sets for high-dimensional, real-world systems. Our hardware drone racing experiment is one example that suggests this goal is within reach. If you have any questions or are interested in collaboration, please feel free to contact the main author Jingqi Li at james.jingqi.li@gmail.com.
 
