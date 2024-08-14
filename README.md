@@ -1,4 +1,4 @@
-Lipschitz Continuous Reachability Learning (LCRL)
+## Lipschitz Continuous Reachability Learning (LCRL)
 
 # Introduction
 
