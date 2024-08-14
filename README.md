@@ -50,7 +50,7 @@ You may ask why we choose 4-layer NN for drone racing but 3-layer NN for highway
 
 (1) First, we over-parameterize the NN Q functions and NN policies such that we can bring the critic loss down, which measures the Bellman equation fitting error;
 (2) Subsequently, we want to mitigate overfitting by shrinking the size of neural networks, but maintaining small critic loss, because otherwise, the representation power of NN is not enough to capture the complex structure of value function;
-(3) We need a larger batch size if the size of NN grows. In our training, we set the batch size equal to the number of neurons in each layer. But this is just a heuristic. 
+(3) We need a larger batch size if the size of NN grows. In our training, we set the batch size equal to the number of neurons in each layer. But this is just a heuristic for your reference. 
 
 NOTE that the convergence of critic loss implies that the neural network value function approximates well the value function induced by the current learned policy. However, it does not mean the learning is done because we cannot tell the quality of policies by just looking at the critic loss. In min-max DDPG, it improves the learned policy by minimizing the control actor loss, and refines the disturbance policy by maximizing the disturbance actor loss. However, we observe that a small critic loss stabilizes the multi-agent reinforcement learning training, and therefore helps policy learning. 
 
