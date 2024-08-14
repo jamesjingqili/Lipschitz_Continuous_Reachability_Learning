@@ -20,8 +20,6 @@ In addition, our method can be used offline for a comprehensive certification, i
 
 We adapt max-min DDPG and max-min SAC to learn our new reach-avoid value function. Our implementation builds upon the deep RL infrastructure of tianshou (version 0.5.1).  
 
-Brief tutorial: we use experiment_script/run_training_ddpg.py to learn our reach-avoid value function. We visualize the learned reach-avoid sets, Lipschitz certified, and SOCP certified sets in experiment_script/droneracing_post_training_DDPG_eval_new.ipynb. 
-
 
 Install instruction:
 
@@ -33,6 +31,17 @@ Install instruction:
 
 4. run in terminal: conda install -c conda-forge ffmpeg
 
+Brief tutorial: we use experiment_script/run_training_ddpg.py to learn our reach-avoid value function. We visualize the learned reach-avoid sets, Lipschitz certified, and SOCP certified sets in experiment_script/droneracing_post_training_DDPG_eval_new.ipynb. 
+
+# Some sample training scripts:
+
+For drone racing: python run_training_ddpg.py --task ra_droneracing_Game-v6 --control-net 512 512 512 512 --disturbance-net 512 512 512 512 --critic-net 512 512 512 512 --epoch 10 --total-episodes 160 --gamma 0.95
+
+For highway take-over: python run_training_ddpg.py --task ra_highway_Game-v2 --control-net 512 512 512 --disturbance-net 512 512 512 --critic-net 512 512 512 --epoch 10 --total-episodes 160 --gamma 0.95
+
+NOTE that the convergence of critic loss implies that the neural network value function approximates the ground truth value function well under the current learned policy. However, it does not mean the learning is done because we cannot tell the quality of policies by just looking at the critic loss. In max-min DDPG, it improves the learned policy by minimizing the control actor loss, and refines the disturbance policy by maximizing the disturbance actor loss. 
+
+In practice, we suggest training max-min DDPG for 160 episodes, where each episode takes 10 epochs. The precise relationship between episodes and epochs can be found at the bottom of the "run_training_ddpg.py". We save the trained policy every 10 epoch. Due to the non-stationarity nature of the max-min DDPG training, it is hard to guarantee that the last iteration policy is the best. For now, we have not figured out a better way than just enumerating each saved policy and finding the best among them. 
 
 
 # Limitation and future directions:
