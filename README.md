@@ -5,7 +5,7 @@ This is a repo for learning trustworthy reachability sets of high-dimensional no
 
 # Introduction
 
-We propose a new reach-avoid value function, which is Lipschitz continuous, and its Bellman equation is a contraction mapping. Our method does not need to anneal the time discount factor to 1, which is commonly used in prior works. This simplifies the training procedure and can save training time. We also propose two post-learning reach-avoid set certification methods for verifying if a set of states is within the ground truth reach-avoid set.
+We propose a new reach-avoid value function, which is Lipschitz continuous, and its Bellman equation is a contraction mapping. Our method does not need to anneal the time discount factor to 1, which is commonly used in prior works. This simplifies the training procedure and can save training time. We also propose two post-learning reach-avoid set certification methods for verifying if a learned reach avoid set is within the ground truth reach-avoid set.
 
 
 Both of our methods provide deterministic guarantees of whether a set of states can safely reach the target sets, under all potential disturbances within a prespecified bound. Our first certification method uses the learned control policy and the Lipschitz constant of the dynamics to construct a theoretical lower bound of the ground truth value function. **This lower bound becomes tight when the learned policy is optimal**. The super zero-level set of this constructed lower bounding function recovers a subset of the ground truth reach-avoid set; Moreover, our second certification method formulates efficient second-order cone programmings to evaluate the constraint violations and the target set reaching, against the worst-case disturbance. 
