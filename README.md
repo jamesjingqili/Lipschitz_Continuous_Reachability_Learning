@@ -53,7 +53,7 @@ NOTE that the convergence of critic loss implies that the neural network value f
 
 In practice, we suggest training min-max DDPG for 160 episodes, where each episode takes 10 epochs. The precise relationship between episodes and epochs can be found at the bottom of the `run_training_ddpg.py`. We save the trained policy every 10 epochs. Due to the non-stationarity nature of the minimax DDPG training, it is hard to guarantee that the last iteration policy is the best. For now, we have not figured out a better way than just enumerating each saved policy and finding the best among them. 
 
-Finally, we recommend always setting the action space to range from -1 to 1 in the gym.env definition, but we can scale the actions within the gym.step() function when defining the dynamics. For example, if we have two double integrator dynamics: the first integrator’s control is bounded by -0.1 to 0.1, and the second integrator’s control is bounded by -0.3 to 0.3. In this case, we can define self.action_space = spaces.Box(-1, 1, shape=(2,), dtype=np.float64) and implement the dynamics in gym.step(self, u) as follows:
+Finally, we recommend always setting the action space to range from -1 to 1 in the gym.env definition, but we can scale or shift the actions within the gym.step() function when defining the dynamics. For example, if we have two double integrator dynamics: the first integrator’s control is bounded by -0.1 to 0.1, and the second integrator’s control is bounded by -0.3 to 0.3. In this case, we can define self.action_space = spaces.Box(-1, 1, shape=(2,), dtype=np.float64) and implement the dynamics in gym.step(self, u) as follows:
 
 > x1 = x1 + dt * v1
 
