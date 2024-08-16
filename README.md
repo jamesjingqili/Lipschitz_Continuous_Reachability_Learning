@@ -12,7 +12,7 @@ Furthermore, we also propose two efficient post-learning reach-avoid set verific
 
 Both of our methods provide deterministic guarantees of whether a set of states can safely reach the target sets, under all potential disturbances within a prespecified bound. Our first certification method uses the learned control policy and the Lipschitz constant of the dynamics to construct a theoretical lower bound of the ground truth value function. **This lower bound becomes tight when the learned policy is optimal**. The super zero-level set of this constructed lower bounding function recovers a subset of the ground truth reach-avoid set; Moreover, our second certification method formulates efficient second-order cone programmings to evaluate the constraint violations and the target set reaching, against the worst-case disturbance. 
 
-Both of our methods can be computed in real-time to certify if a neighboring set of the current state is within the ground truth reach-avoid set. The computational complexity of evaluating our two certifications scales polynomially with respect to the state dimensions.
+In addition, both of our methods can be computed in real-time to certify if a neighboring set of the current state is within the ground truth reach-avoid set. The computational complexity of evaluating our two certifications scales **polynomially** with respect to the state dimensions.
 
 In addition, our method can be used offline for a comprehensive certification, i.e., certifying if a large set of states is within the ground truth reach-avoid set.
 
