@@ -63,7 +63,7 @@ Finally, we recommend always setting the action space to range from -1 to 1 in t
 
 > v2 = v2 + dt * u[1] * 0.3
 
-If you are familiar with natural policy gradient methods, you may know that without normalization, the policy gradient can become ill-conditioned because certain actions may dominate the actor network’s output. While the action-bound unification heuristic described above is not equivalent to natural policy gradient methods, it is inspired by them. By unifying the action bounds, we ensure that the magnitude of each dimension in the actor network’s output is balanced, which contributes to stabilizing the training process.
+If you are familiar with natural policy gradient methods, you may know that without normalization, the policy gradient can become ill-conditioned because certain actions may dominate the actor network’s output. While the action-bound unification heuristic described above is not equivalent to natural policy gradient methods, it is inspired by them. By unifying the action bounds, we ensure that the magnitude of each dimension in the actor network’s output is balanced, which contributes to stabilizing the training process. For more examples, you can check the files in `LCRL/reach_rl_gym_envs/`.
 
 # Limitation and future directions:
 In the certification part of our work, we begin by exploring the new idea of using Lipschitz continuity and the learned control policy to construct a theoretical lower bound for the ground truth reach-avoid value function, which is typically unknown and difficult to compute for high-dimensional systems. However, we believe there are several avenues to improve this theoretical lower bound. 
