@@ -1,20 +1,15 @@
 ## Lipschitz Continuous Reachability Learning (LCRL)
 
-This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Deep Learning for Reachability Using a New Lipschitz Continuous Value Function](https://arxiv.org/abs/2408.07866), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, arxiv 2408.07866.
+This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. We also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the first verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Deep Learning for Reachability Using a New Lipschitz Continuous Value Function](https://arxiv.org/abs/2408.07866), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, arxiv 2408.07866.
 
 
 # Introduction
 
 We propose a new reach-avoid value function, which is Lipschitz continuous, and its Bellman equation is a contraction mapping without the need for any approximation. Our method does not need to anneal the time discount factor to 1, which is commonly used in prior works. This simplifies the training procedure and saves training time. (For example, assuming NN training quality is reasonably good, our method requires only 1/N training time of the prior methods, where N is the number of times that the time-discount factor is annealed in their methods.) 
 
-Furthermore, we also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the *first* verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. 
+Our two verification methods provide deterministic guarantees of whether a set of states can safely reach the target sets, under all potential disturbances within a prespecified bound. Our first method uses the learned control policy and the Lipschitz constant of the dynamics to construct a theoretical lower bound of the ground truth value function. **This lower bound becomes tight when the learned policy is optimal**. The super zero-level set of this constructed lower bounding function recovers a subset of the ground truth reach-avoid set; Moreover, our second method formulates efficient second-order cone programmings to evaluate the constraint violations and the target set reaching, against the worst-case disturbance. 
 
-
-Both of our methods provide deterministic guarantees of whether a set of states can safely reach the target sets, under all potential disturbances within a prespecified bound. Our first certification method uses the learned control policy and the Lipschitz constant of the dynamics to construct a theoretical lower bound of the ground truth value function. **This lower bound becomes tight when the learned policy is optimal**. The super zero-level set of this constructed lower bounding function recovers a subset of the ground truth reach-avoid set; Moreover, our second certification method formulates efficient second-order cone programmings to evaluate the constraint violations and the target set reaching, against the worst-case disturbance. 
-
-In addition, both of our methods can be computed in real-time to certify if a neighboring set of the current state is within the ground truth reach-avoid set. The computational complexity of evaluating our two certifications scales **polynomially** with respect to the state dimensions.
-
-In addition, our method can be used offline for a comprehensive certification, i.e., certifying if a large set of states is within the ground truth reach-avoid set.
+In addition, both of our methods can be computed in real-time to certify if a neighboring set of the current state is within the ground truth reach-avoid set. The computational complexity of evaluating our two certifications scales **polynomially** with respect to the state dimensions. Our method can also be used offline for a comprehensive certification, i.e., certifying if a large set of states is within the ground truth reach-avoid set.
 
 
 
