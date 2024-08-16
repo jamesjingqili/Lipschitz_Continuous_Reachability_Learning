@@ -53,6 +53,17 @@ NOTE that the convergence of critic loss implies that the neural network value f
 
 In practice, we suggest training min-max DDPG for 160 episodes, where each episode takes 10 epochs. The precise relationship between episodes and epochs can be found at the bottom of the `run_training_ddpg.py`. We save the trained policy every 10 epochs. Due to the non-stationarity nature of the minimax DDPG training, it is hard to guarantee that the last iteration policy is the best. For now, we have not figured out a better way than just enumerating each saved policy and finding the best among them. 
 
+Finally, we recommend always setting the action space to range from -1 to 1 in the gym.env definition, but we can scale the actions within the gym.step() function when defining the dynamics. For example, if we have two double integrator dynamics: the first integrator’s control is bounded by -0.1 to 0.1, and the second integrator’s control is bounded by -0.3 to 0.3. In this case, we can define self.action_space = spaces.Box(-1, 1, shape=(2,), dtype=np.float64) and implement the dynamics in gym.step(self, u) as follows:
+
+> x1 = x1 + dt * v1
+
+> v1 = v1 + dt * u[0] * 0.1
+
+> x2 = x2 + dt * v2
+
+> v2 = v2 + dt * u[1] * 0.3
+
+If you are familiar with natural policy gradient methods, you may know that without normalization, the policy gradient can become ill-conditioned because certain actions may dominate the actor network’s output. While the action-bound unification heuristic described above is not equivalent to natural policy gradient methods, it is inspired by them. By unifying the action bounds, we ensure that the magnitude of each dimension in the actor network’s output is balanced, which contributes to stabilizing the training process.
 
 # Limitation and future directions:
 In the certification part of our work, we begin by exploring the new idea of using Lipschitz continuity and the learned control policy to construct a theoretical lower bound for the ground truth reach-avoid value function, which is typically unknown and difficult to compute for high-dimensional systems. However, we believe there are several avenues to improve this theoretical lower bound. 
