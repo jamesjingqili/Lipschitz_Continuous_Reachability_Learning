@@ -60,7 +60,7 @@ class Double_Drones_RA_linear_Game_Env6(gym.Env):
         ])
         
         # safety cone of the ego drone:
-        cone1 = np.sqrt((state[0] - state[6])**2 + (state[2] - state[8])**2) - (1+1*(state[10]-state[4]))*self.safe_cone_radius if state[4] < state[10] else 1e6
+        cone1 = np.sqrt((state[0] - state[6])**2 + (state[2] - state[8])**2) - (1+max(0,(state[10]-state[4])))*self.safe_cone_radius
         
         
         stay_with_in_left_fence = (state[0]+self.gate_width/2) - state[2]
