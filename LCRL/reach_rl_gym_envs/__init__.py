@@ -14,7 +14,6 @@ from gymnasium.envs.registration import (
 
 # Customized environments begin: 
 
-# reach avoid cartpole
 
 register(
     id='ra_highway_Game-v2',
