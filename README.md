@@ -65,7 +65,7 @@ Finally, we recommend always setting the action space to range from -1 to 1 in t
 
 If you are familiar with natural policy gradient methods, you may know that without normalization, the policy gradient can become ill-conditioned because certain actions may dominate the actor network’s output. While the action-bound unification heuristic described above is not equivalent to natural policy gradient methods, it is inspired by them. By unifying the action bounds, we ensure that the magnitude of each dimension in the actor network’s output is balanced, which contributes to stabilizing the training process. For more examples, you can check the files in `LCRL/reach_rl_gym_envs/`.
 
-# Limitation and future directions:
+# Future directions:
 
 In the reachability learning part, although the sufficient condition for our new value function to be Lipschitz continuous assumes that the dynamics, reward, and constraints are Lipschitz continuous, we observe in practice that our learning framework performs well even with non-Lipschitz continuous dynamics, rewards, and constraints. We plan to explore this further in our future work. Another interesting future direction is to extend our framework to contact-rich multi-robot manipulation scenarios using differentiable contact simulators ([[1]](https://arxiv.org/pdf/2203.00806), [[2]](https://arxiv.org/pdf/2403.08716), [[3]](https://arxiv.org/pdf/2210.09420)). 
 
