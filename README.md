@@ -2,6 +2,8 @@
 
 This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. We also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the first verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Deep Learning for Reachability Using a New Lipschitz Continuous Value Function](https://arxiv.org/abs/2408.07866), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, arxiv 2408.07866.
 
+[Video presentation](https://drive.google.com/file/d/13jlGLcVzhqk0HtwAO3Jc8Xl0BSMKEB4T/view?usp=drive_link).
+
 
 # Introduction
 
