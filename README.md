@@ -24,7 +24,7 @@ Install instruction:
 
 1. git clone the repo
 
-2. cd to the root location of this repo, where you should be able to see the "setup.py". Note that if you use MacOS, then pytorch 2.4.0 is not available, and therefore you have to first change the line 22 of setup.py from "pytorch==2.4.0" to "pytorch==2.2.2", and then do the following step. Pytorch==2.4.0 is available for Ubuntu systems. 
+2. cd to the root location of this repo, where you should be able to see the "setup.py". Note that if you use MacOS, then pytorch 2.4.0 is not available, and therefore you have to first change the line 22 of setup.py from "pytorch==2.4.0" to "pytorch==2.2.2", and then do the step 3. (However, Pytorch==2.4.0 is available for Ubuntu systems. So, if you use Ubuntu, then you can directly go to step 3. )
 
 3. run in terminal: pip install -e .
 
