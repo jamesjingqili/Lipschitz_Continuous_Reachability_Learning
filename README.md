@@ -4,6 +4,8 @@ This is a repo for learning trustworthy reachability sets of high-dimensional no
 
 [Video presentation](https://drive.google.com/file/d/13jlGLcVzhqk0HtwAO3Jc8Xl0BSMKEB4T/view?usp=drive_link).
 
+Our repo defines reach-avoid problems using gym env API. You can find reach-avoid game examples in /LCRL/reach_rl_gym_envs/
+
 # Introduction
 
 Inspired by prior works, we propose a new reach-avoid value function, which is Lipschitz continuous, and its Bellman equation is a contraction mapping without the need for any approximation. Our method does not need to anneal the time discount factor to 1, which is commonly used in prior works. This simplifies the training procedure and saves training time. (For example, assuming NN training quality is reasonably good, our method requires only 1/N training time of the prior methods, where N is the number of times that the time-discount factor is annealed.) 
