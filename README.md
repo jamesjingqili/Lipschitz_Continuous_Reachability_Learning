@@ -7,20 +7,6 @@ This is a repo for learning trustworthy reachability sets of high-dimensional no
 Our repo defines reach-avoid problems using gym env API. You can find reach-avoid game examples in /LCRL/reach_rl_gym_envs/
 
 
-```
-@ARTICLE{10855593,
-  author={Li, Jingqi and Lee, Donggun and Lee, Jaewon and Dong, Kris Shengjun and Sojoudi, Somayeh and Tomlin, Claire},
-  journal={IEEE Robotics and Automation Letters}, 
-  title={Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function}, 
-  year={2025},
-  volume={},
-  number={},
-  pages={1-8},
-  keywords={Reachability;Machine Learning for Robot Control;Reinforcement Learning},
-  doi={10.1109/LRA.2025.3535183}}
-
-```
-
 # Introduction
 
 Inspired by prior works, we propose a new reach-avoid value function, which is Lipschitz continuous, and its Bellman equation is a contraction mapping without the need for any approximation. Our method does not need to anneal the time discount factor to 1, which is commonly used in prior works. This simplifies the training procedure and saves training time. (For example, assuming NN training quality is reasonably good, our method requires only 1/N training time of the prior methods, where N is the number of times that the time-discount factor is annealed.) 
@@ -101,3 +87,16 @@ Moreover, our real-time SOCP certification heavily relies on the [Clarabel](http
 
 Overall, we are optimistic that in the near future, we will be able to compute trustworthy reach-avoid sets for high-dimensional, real-world systems. Our results suggest that this goal is reachable. If you have any questions or suggestions to improve this work, please feel free to contact the authors. Thank you!!
 
+```
+@ARTICLE{10855593,
+  author={Li, Jingqi and Lee, Donggun and Lee, Jaewon and Dong, Kris Shengjun and Sojoudi, Somayeh and Tomlin, Claire},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Reachability;Machine Learning for Robot Control;Reinforcement Learning},
+  doi={10.1109/LRA.2025.3535183}}
+
+```
