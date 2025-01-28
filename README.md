@@ -1,10 +1,25 @@
 ## Lipschitz Continuous Reachability Learning (LCRL)
 
-This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. We also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the first verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Deep Learning for Reachability Using a New Lipschitz Continuous Value Function](https://arxiv.org/abs/2408.07866), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, arxiv 2408.07866.
+This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. We also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the first verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function](https://ieeexplore.ieee.org/document/10855593), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, IEEE Robotics and Automation Letters, 2025. Here is the [arxiv](https://arxiv.org/abs/2408.07866) link. 
 
 [Video presentation](https://drive.google.com/file/d/13jlGLcVzhqk0HtwAO3Jc8Xl0BSMKEB4T/view?usp=drive_link).
 
 Our repo defines reach-avoid problems using gym env API. You can find reach-avoid game examples in /LCRL/reach_rl_gym_envs/
+
+
+```
+@ARTICLE{10855593,
+  author={Li, Jingqi and Lee, Donggun and Lee, Jaewon and Dong, Kris Shengjun and Sojoudi, Somayeh and Tomlin, Claire},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Reachability;Machine Learning for Robot Control;Reinforcement Learning},
+  doi={10.1109/LRA.2025.3535183}}
+
+```
 
 # Introduction
 
