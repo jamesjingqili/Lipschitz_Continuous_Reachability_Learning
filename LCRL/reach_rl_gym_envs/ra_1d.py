@@ -4,7 +4,6 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 class LQR_Env(gym.Env):
-    # TODO: 1. baseline over approximation; 2. our critic loss drop faster 
     def __init__(self):
         self.render_mode = None
         self.dt = 0.01
@@ -20,9 +19,7 @@ class LQR_Env(gym.Env):
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32) # joint action space
 
     def step(self, action):
-        # assert len(action) == 2, "action should be a 1D array"
         self.state = (1+self.dt)*self.state + self.dt * (action[0]+ 0.5*action[1])
-        # rew = self.state[0] - 2.0+ 2.5#-1.0
         rew = -(self.state[0]**2 - 2.0)
         if rew > 10:
             rew = 10
