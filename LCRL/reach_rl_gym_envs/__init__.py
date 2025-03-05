@@ -34,3 +34,9 @@ register(
     reward_threshold=1e8,
 )
 
+register(
+    id="ra_droneracing-v6",
+    entry_point="LCRL.reach_rl_gym_envs.Double_Drones_RA_linear:Double_Drones_RA_linear_Env6",
+    max_episode_steps=200,
+    reward_threshold=1e8
+)

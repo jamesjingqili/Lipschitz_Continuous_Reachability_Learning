@@ -12,6 +12,7 @@ from LCRL.policy.modelfree.ddpg_reach_avoid_game_new import reach_avoid_game_DDP
 from LCRL.policy.modelfree.ddpg_reach_avoid_game_classical import reach_avoid_game_DDPGPolicy_annealing
 from LCRL.policy.modelfree.sac_reach_avoid_game_new import reach_avoid_game_SACPolicy
 from LCRL.policy.modelfree.sac_reach_avoid_game_classical import reach_avoid_game_SACPolicy_annealing
+from LCRL.policy.modelfree.ddpg_reach_avoid_new import reach_avoid_DDPGPolicy
 
 __all__ = [
     "BasePolicy",
@@ -22,5 +23,6 @@ __all__ = [
     "reach_avoid_game_DDPGPolicy", # Our new method, implemented using DDPG
     "reach_avoid_game_SACPolicy_annealing", # arXiv:2112.12288, implemented using SAC
     "reach_avoid_game_SACPolicy", # Our new method, implemented using SAC
+    "reach_avoid_DDPGPolicy"# non-disturbance reach-avoid
 ]
 
