@@ -1,6 +1,6 @@
 ## Lipschitz Continuous Reachability Learning (LCRL)
 
-This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. We also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the first verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function](https://ieeexplore.ieee.org/document/10855593), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, IEEE Robotics and Automation Letters, 2025. Here is the [arxiv](https://arxiv.org/abs/2408.07866) link. 
+This is a repo for learning trustworthy reachability sets of high-dimensional nonlinear systems using a newly proposed Lipschitz continuous reachability value function. We also propose two efficient post-learning reach-avoid set verification methods. To the best of our knowledge, they are the first verification methods for providing deterministic guarantees for learned reach-avoid sets, against the worst-case disturbance. If you are interested in learning more about this work, please refer to the following paper: [Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function](https://ieeexplore.ieee.org/document/10855593), J. Li, D. Lee, J. Lee, K. Dong, S. Sojoudi, C. Tomlin, IEEE Robotics and Automation Letters, 2025. 
 
 [Video presentation](https://drive.google.com/file/d/13jlGLcVzhqk0HtwAO3Jc8Xl0BSMKEB4T/view?usp=drive_link).
 
@@ -88,7 +88,7 @@ Moreover, our real-time SOCP certification heavily relies on the [Clarabel](http
 Overall, we are optimistic that in the near future, we will be able to compute trustworthy reach-avoid sets for high-dimensional, real-world systems. Our results suggest that this goal is reachable. If you have any questions or suggestions to improve this work, please feel free to contact the authors. Thank you!!
 
 ```
-@ARTICLE{10855593,
+@ARTICLE{li2025certifiable,
   author={Li, Jingqi and Lee, Donggun and Lee, Jaewon and Dong, Kris Shengjun and Sojoudi, Somayeh and Tomlin, Claire},
   journal={IEEE Robotics and Automation Letters}, 
   title={Certifiable Reachability Learning Using a New Lipschitz Continuous Value Function}, 
