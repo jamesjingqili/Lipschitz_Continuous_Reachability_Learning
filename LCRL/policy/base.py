@@ -5,7 +5,7 @@ import gymnasium as gym
 import numpy as np
 import torch
 from gymnasium.spaces import Box, Discrete, MultiBinary, MultiDiscrete
-from numba import njit
+# from numba import njit
 from torch import nn
 
 from LCRL.data import Batch, ReplayBuffer, to_numpy, to_torch_as
@@ -411,7 +411,7 @@ class BasePolicy(ABC, nn.Module):
         _nstep_return(f64, b, f32.reshape(-1, 1), i64, 0.1, 1)
 
 
-@njit
+#@njit
 def _gae_return(
     v_s: np.ndarray,
     v_s_: np.ndarray,
@@ -430,7 +430,7 @@ def _gae_return(
     return returns
 
 
-@njit
+#@njit
 def _nstep_return(
     rew: np.ndarray,
     end_flag: np.ndarray,

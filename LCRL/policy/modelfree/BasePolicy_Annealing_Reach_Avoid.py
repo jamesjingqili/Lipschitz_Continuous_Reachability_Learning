@@ -9,7 +9,7 @@ import gym
 import torch
 import numpy as np
 from torch import nn
-from numba import njit
+# from numba import njit
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple, Union, Optional, Callable
 from gym.spaces import Box, Discrete, MultiDiscrete, MultiBinary
@@ -379,7 +379,7 @@ class BasePolicy_Annealing_Reach_Avoid(ABC, nn.Module):
         _nstep_return_approximated_reach_avoid_Bellman_equation(f64, b, f32.reshape(-1, 1),f32.reshape(-1, 1), i64, 0.9)
 
 
-@njit
+#@njit
 def _gae_return(
     v_s: np.ndarray,
     v_s_: np.ndarray,

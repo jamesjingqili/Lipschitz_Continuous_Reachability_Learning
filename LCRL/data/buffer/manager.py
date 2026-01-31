@@ -1,7 +1,7 @@
 from typing import List, Optional, Sequence, Tuple, Union
 
 import numpy as np
-from numba import njit
+# from numba import njit
 
 from LCRL.data import Batch, PrioritizedReplayBuffer, ReplayBuffer
 from LCRL.data.batch import _alloc_by_keys_diff, _create_value
@@ -215,7 +215,7 @@ class PrioritizedReplayBufferManager(PrioritizedReplayBuffer, ReplayBufferManage
 
 
 
-@njit
+#@njit
 def _prev_index(
     index: np.ndarray,
     offset: np.ndarray,
@@ -236,7 +236,7 @@ def _prev_index(
     return prev_index
 
 
-@njit
+#@njit
 def _next_index(
     index: np.ndarray,
     offset: np.ndarray,

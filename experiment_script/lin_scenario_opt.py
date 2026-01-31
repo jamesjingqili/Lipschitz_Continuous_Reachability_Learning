@@ -106,7 +106,7 @@ def sample_noise(N, horizon, epsilon_d):
 
 
 
-def reach_avoid_measure_vectorized(envv, horizon, init_cond_final, V_values, policy,args):
+def reach_avoid_measure_vectorized(envv, horizon, init_cond_final, V_values, policy, args):
     """
     Measure the reach-avoid performance of the system given the initial conditions and their corresponding V values.
     This is a vectorized version for efficiency.

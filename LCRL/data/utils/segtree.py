@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 import numpy as np
-from numba import njit
+# from numba import njit
 
 
 class SegmentTree:
@@ -95,7 +95,7 @@ class SegmentTree:
         _get_prefix_sum_idx(f32, 1, f64)
 
 
-@njit
+#@njit
 def _setitem(tree: np.ndarray, index: np.ndarray, value: np.ndarray) -> None:
     """Numba version, 4x faster: 0.1 -> 0.024."""
     tree[index] = value
@@ -104,7 +104,7 @@ def _setitem(tree: np.ndarray, index: np.ndarray, value: np.ndarray) -> None:
         tree[index] = tree[index * 2] + tree[index * 2 + 1]
 
 
-@njit
+#@njit
 def _reduce(tree: np.ndarray, start: int, end: int) -> float:
     """Numba version, 2x faster: 0.009 -> 0.005."""
     # nodes in (start, end) should be aggregated
@@ -119,7 +119,7 @@ def _reduce(tree: np.ndarray, start: int, end: int) -> float:
     return result
 
 
-@njit
+#@njit
 def _get_prefix_sum_idx(value: np.ndarray, bound: int, sums: np.ndarray) -> np.ndarray:
     """Numba version (v0.51), 5x speed up with size=100000 and bsz=64.
 
