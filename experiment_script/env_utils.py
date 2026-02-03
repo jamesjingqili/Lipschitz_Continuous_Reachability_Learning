@@ -1,3 +1,7 @@
+import sys 
+sys.path.append(
+    '/Users/sampada/Documents/Research/Bayesian_Optimization/code/bayes_opt_calibration/')
+
 import argparse
 import os
 
@@ -213,8 +217,8 @@ def get_env_and_policy(args, epoch_id=100, pretrained=True):
     else:
         # NOTE! if you want to use the pre-trained model, you can set the path to the model here:
         # otherwise, you can skip this cell and move to the next cell
-        log_path = "pretrained_neural_networks/ra_droneracing_Game-v6/ddpg_reach_avoid_actor_activation_ReLU_critic_activation_ReLU_game_gd_steps_1_tau_0.005_training_num_8_buffer_size_40000_c_net_512_4_a1_512_4_a2_512_4_gamma_0.95/noise_0.1_actor_lr_0.0001_critic_lr_0.001_batch_512_step_per_epoch_40000_kwargs_{}_seed_0"
-    
+        log_path = "Lipschitz_Continuous_Reachability_Learning/experiment_script/pretrained_neural_networks/ra_droneracing_Game-v6/ddpg_reach_avoid_actor_activation_ReLU_critic_activation_ReLU_game_gd_steps_1_tau_0.005_training_num_8_buffer_size_40000_c_net_512_4_a1_512_4_a2_512_4_gamma_0.95/noise_0.1_actor_lr_0.0001_critic_lr_0.001_batch_512_step_per_epoch_40000_kwargs_{}_seed_0"
+
     policy = DDPGPolicy(
         critic,
         critic_optim,
@@ -232,10 +236,11 @@ def get_env_and_policy(args, epoch_id=100, pretrained=True):
         )
     
     if os.path.exists(log_path):
-        policy.load_state_dict(torch.load(log_path+'/epoch_id_{}/policy.pth'.format(epoch_id)))
-        print("policy loaded!")
+        policy.load_state_dict(torch.load(log_path+'/epoch_id_{}/policy.pth'.format(epoch_id), map_location=torch.device('cpu')))
+        print("\nPolicy loaded!")
     else:
-        print("log_path does not exist!")
+        # print("log_path does not exist!")
+        raise(Exception("Policy log path does not exist!"))
 
     return env, policy
 
