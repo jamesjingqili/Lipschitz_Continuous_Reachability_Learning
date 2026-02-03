@@ -28,6 +28,12 @@ register(
     reward_threshold=1e8
 )
 register(
+    id="ra_AggressiveRacing_Game-v0",
+    entry_point="LCRL.reach_rl_gym_envs.AggressiveRacing:AggressiveRacing_Game_Env0",
+    max_episode_steps=200,
+    reward_threshold=1e8
+)
+register(
     id="ra_1d_Game-v0",
     entry_point="LCRL.reach_rl_gym_envs.ra_1d:LQR_Env",
     max_episode_steps=1000,
