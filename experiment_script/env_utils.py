@@ -309,7 +309,7 @@ def evaluate_V_batch(states, policy):
     if single_state:
         return values.flatten()[0]  # Return scalar for single state
     else:
-        return values.flatten()     # Return array for batch
+        return values #.flatten()     # Return array for batch
 
 
 class NoResetSyncVectorEnv(SyncVectorEnv):
