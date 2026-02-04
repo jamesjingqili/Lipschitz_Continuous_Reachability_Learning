@@ -1,3 +1,7 @@
+import sys 
+sys.path.append(
+    '/Users/sampada/Documents/Research/Bayesian_Optimization/code/bayes_opt_calibration/')
+
 import os
 import gymnasium as gym
 import numpy as np
@@ -9,7 +13,9 @@ from LCRL.exploration import GaussianNoise
 from LCRL.utils.net.common import Net
 from LCRL.utils.net.continuous import Actor, Critic
 
-from env_utils import NoResetSyncVectorEnv, evaluate_V_batch, find_a_batch, find_a, get_args, get_env_and_policy
+from Lipschitz_Continuous_Reachability_Learning import experiment_script
+from experiment_script.env_utils import NoResetSyncVectorEnv, evaluate_V_batch, find_a_batch, find_a, get_args, get_env_and_policy
+
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
@@ -33,6 +39,7 @@ def sample_init_cond(N, alpha, policy):
     """
     Sample N initial conditions in state space that satisfy the reach-avoid constraints.
     """
+    print("Sampling initial conditions")
     ego_vx = 0.0
     ego_vy = 0.7 # previous 0.8 ##0.2 ebonye/jingqi
     ego_z = 0.0
@@ -186,6 +193,7 @@ def get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, 
     Get a new alpha value based on the sampled initial conditions and their corresponding V values
     and reach avoid measures.
     """
+    print("Getting new alpha")
     # reach_avoid_measures = reach_avoid_measure(env, horizon, noise, init_cond_final, V_values_final)
     reach_avoid_measures, state_trajs_iterative = reach_avoid_measure_vectorized(env, horizon, init_cond_final, V_values_final, policy, args)
 
@@ -206,10 +214,12 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, args,alpha_init=n
     """
     alpha = alpha_init
     N = compute_min_scenarios_alex(eps, delt, d=12)
+    print("N: ", N)
     
     start_time = time.time()
     for j in range(M):
         init_cond_final, V_values_final = sample_init_cond(N, alpha, policy)
+        print(init_cond_final.shape)
         # noise = sample_noise(N, horizon, epsilon_d)
         new_alpha, state_traj_iterative = get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, args) #, noise)
         if new_alpha == alpha:
