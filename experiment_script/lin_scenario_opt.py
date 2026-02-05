@@ -35,7 +35,7 @@ def compute_min_scenarios_alex(epsilon, delta, d):
     # num = int((2 / epsilon) * (np.log(1 / delta) + 1))
     return num
 
-def sample_init_cond(N, alpha, policy):
+def sample_init_cond(N, alpha, policy, rng):
     """
     Sample N initial conditions in state space that satisfy the reach-avoid constraints.
     """
@@ -58,12 +58,12 @@ def sample_init_cond(N, alpha, policy):
     try_N = N * 10
     while not have_sufficient:
         
-        x01 = np.random.uniform(-0.9, 0.9, size=(try_N, 1))
-        ego_vx1 = np.random.uniform(0, 0.1, size=(try_N, 1))
-        y01 = np.random.uniform(-2.6, -0.0, size=(try_N, 1))
-        ego_vy1 = np.random.uniform(0.6, 0.8, size=(try_N, 1))
-        z01 = np.random.uniform(0, 0.1, size=(try_N, 1))
-        ego_vz1 = np.random.uniform(0, 0.1, size=(try_N, 1))
+        x01 = rng.uniform(-0.9, 0.9, size=(try_N, 1))
+        ego_vx1 = rng.uniform(0, 0.1, size=(try_N, 1))
+        y01 = rng.uniform(-2.6, -0.0, size=(try_N, 1))
+        ego_vy1 = rng.uniform(0.6, 0.8, size=(try_N, 1))
+        z01 = rng.uniform(0, 0.1, size=(try_N, 1))
+        ego_vz1 = rng.uniform(0, 0.1, size=(try_N, 1))
         
         # ad_x1 = np.random.uniform(0.3, 0.5, size=(N, 1))
         # ad_vx1 = np.random.uniform(0, 0.1, size=(N, 1))
@@ -208,7 +208,8 @@ def get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, 
 
     return new_alpha, state_trajs_iterative
 
-def solve_iterative_method(env, eps, delt, M, horizon, policy, args,alpha_init=np.inf):
+def solve_iterative_method(env, eps, delt, M, horizon, policy, args,
+                            rng, alpha_init=np.inf):
     """
     Solve the iterative method for reach-avoid certification.
     """
@@ -218,7 +219,7 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, args,alpha_init=n
     
     start_time = time.time()
     for j in range(M):
-        init_cond_final, V_values_final = sample_init_cond(N, alpha, policy)
+        init_cond_final, V_values_final = sample_init_cond(N, alpha, policy, rng)
         print(init_cond_final.shape)
         # noise = sample_noise(N, horizon, epsilon_d)
         new_alpha, state_traj_iterative = get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, args) #, noise)
