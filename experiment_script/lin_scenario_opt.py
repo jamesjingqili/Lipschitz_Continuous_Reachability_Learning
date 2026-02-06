@@ -35,11 +35,84 @@ def compute_min_scenarios_alex(epsilon, delta, d):
     # num = int((2 / epsilon) * (np.log(1 / delta) + 1))
     return num
 
-def sample_init_cond(N, alpha, policy, rng):
+def sample_init_cond(N, alpha, policy, rng, model_dim, range_x, 
+                    ego_setting, adversary_setting):
     """
     Sample N initial conditions in state space that satisfy the reach-avoid constraints.
     """
     print("Sampling initial conditions")
+    ego_vx, ego_vy, ego_z, ego_vz = ego_setting
+    ad_x, ad_vx, ad_y, ad_vy, ad_z, ad_vz = adversary_setting
+
+    init_cond_final = []
+    V_values_final = []
+    have_sufficient = False
+    try_N = N * 10
+
+    while not have_sufficient:
+        # If model dim is 2
+        x01 = rng.uniform(range_x[0][0], range_x[0][1], size=(try_N, 1))
+        ego_vx1 = np.full((try_N, 1), ego_vx)
+        y01 = rng.uniform(range_x[2][0], range_x[2][1], size=(try_N, 1))
+        ego_vy1 = np.full((try_N, 1), ego_vy)
+        z01 = np.full((try_N, 1), ego_z)
+        ego_vz1 = np.full((try_N, 1), ego_vz)
+
+        ad_x1 = np.full((try_N, 1), ad_x)
+        ad_vx1 = np.full((try_N, 1), ad_vx)
+        ad_y1 = np.full((try_N, 1), ad_y)
+        ad_vy1 = np.full((try_N, 1), ad_vy)
+        ad_z1 = np.full((try_N, 1), ad_z)
+        ad_vz1 = np.full((try_N, 1), ad_vz)
+
+        if model_dim == 2: pass    
+        elif model_dim == 3:
+            z01 = rng.uniform(range_x[4][0], range_x[4][1], size=(try_N, 1))   
+        elif model_dim == 4:
+            ego_vx1 = rng.uniform(range_x[1][0], range_x[1][1], size=(try_N, 1))
+            z01 = rng.uniform(range_x[4][0], range_x[4][1], size=(try_N, 1))
+        elif model_dim == 6:
+            ego_vx1 = rng.uniform(range_x[1][0], range_x[1][1], size=(try_N, 1))
+            ego_vy1 = rng.uniform(range_x[3][0], range_x[3][1], size=(try_N, 1))
+            z01 = rng.uniform(range_x[4][0], range_x[4][1], size=(try_N, 1))
+            ego_vz1 = rng.uniform(range_x[5][0], range_x[5][1], size=(try_N, 1))
+        elif model_dim == 12:
+            ego_vx1 = rng.uniform(range_x[1][0], range_x[1][1], size=(try_N, 1))
+            ego_vy1 = rng.uniform(range_x[3][0], range_x[3][1], size=(try_N, 1))
+            z01 = rng.uniform(range_x[4][0], range_x[4][1], size=(try_N, 1))
+            ego_vz1 = rng.uniform(range_x[5][0], range_x[5][1], size=(try_N, 1))
+            ad_x1 = rng.uniform(range_x[6][0], range_x[6][1], size=(try_N, 1))
+            ad_vx1 = rng.uniform(range_x[7][0], range_x[7][1], size=(try_N, 1))
+            ad_y1 = rng.uniform(range_x[8][0], range_x[8][1], size=(try_N, 1))
+            ad_vy1 = rng.uniform(range_x[9][0], range_x[9][1], size=(try_N, 1))
+            ad_z1 = rng.uniform(range_x[10][0], range_x[10][1], size=(try_N, 1))
+            ad_vz1 = rng.uniform(range_x[11][0], range_x[11][1], size=(try_N, 1))
+        else:
+            raise NotImplementedError
+        
+        init_cond = np.hstack((x01, ego_vx1,
+                                y01, ego_vy1,
+                                z01, ego_vz1,
+                                ad_x1, ad_vx1,
+                                ad_y1, ad_vy1,
+                                ad_z1, ad_vz1))
+        
+        # Check if the sampled initial conditions satisfy the reach-avoid constraints
+        # Use evaluate_V to check the value function
+        V_values = evaluate_V_batch(init_cond, policy)
+        # Append init cond where V_values > alpha
+        valid_indices = np.where(V_values > alpha)[0]
+        init_cond_final.append(init_cond[valid_indices])
+        V_values_final.append(V_values[valid_indices])
+        
+        # if len(init_cond_final) >= N:
+        total_samps = sum(arr.shape[0] for arr in init_cond_final)
+        if total_samps >= N:
+            init_cond_final = np.vstack(init_cond_final)[:N]
+            V_values_final = np.hstack(V_values_final)[:N]
+            have_sufficient = True
+
+    '''
     ego_vx = 0.0
     ego_vy = 0.7 # previous 0.8 ##0.2 ebonye/jingqi
     ego_z = 0.0
@@ -100,6 +173,8 @@ def sample_init_cond(N, alpha, policy, rng):
             init_cond_final = np.vstack(init_cond_final)[:N]
             V_values_final = np.hstack(V_values_final)[:N]
             have_sufficient = True
+        
+    '''
 
     return init_cond_final, V_values_final
 
@@ -208,18 +283,22 @@ def get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, 
 
     return new_alpha, state_trajs_iterative
 
-def solve_iterative_method(env, eps, delt, M, horizon, policy, args,
-                            rng, alpha_init=np.inf):
+def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
+                            rng, range_x, ego_setting, adv_setting, 
+                            alpha_init=np.inf):
     """
     Solve the iterative method for reach-avoid certification.
     """
     alpha = alpha_init
-    N = compute_min_scenarios_alex(eps, delt, d=12)
+    # N = compute_min_scenarios_alex(eps, delt, d=12)
+    N = compute_min_scenarios_alex(eps, delt, d=dim)
     print("N: ", N)
     
     start_time = time.time()
     for j in range(M):
-        init_cond_final, V_values_final = sample_init_cond(N, alpha, policy, rng)
+        init_cond_final, V_values_final = sample_init_cond(N, alpha, policy, rng, dim,
+                                                            range_x, ego_setting, 
+                                                            adv_setting)
         print(init_cond_final.shape)
         # noise = sample_noise(N, horizon, epsilon_d)
         new_alpha, state_traj_iterative = get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, args) #, noise)
