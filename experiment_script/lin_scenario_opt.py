@@ -31,8 +31,8 @@ def compute_min_scenarios_alex(epsilon, delta, d):
     """
     # num = int(np.ceil((math.exp(1) / (epsilon*(math.exp(1)-1)))*(np.log(1/delta) + d*(d+1)/2 + d)))
     # num = torch.tensor(num, device=device)
-    num = int((2 / epsilon) * (np.log(1 / delta) + (d-1)* np.log(2)))
-    # num = int((2 / epsilon) * (np.log(1 / delta) + 1))
+    # num = int((2 / epsilon) * (np.log(1 / delta) + (d-1)* np.log(2)))
+    num = int((2 / epsilon) * (np.log(1 / delta) + 1))
     return num
 
 def sample_init_cond(N, alpha, policy, rng, model_dim, range_x, 
@@ -295,11 +295,13 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
     print("N: ", N)
     
     start_time = time.time()
+    total_num_samples = 0
     for j in range(M):
         init_cond_final, V_values_final = sample_init_cond(N, alpha, policy, rng, dim,
                                                             range_x, ego_setting, 
                                                             adv_setting)
         print(init_cond_final.shape)
+        total_num_samples += len(init_cond_final)
         # noise = sample_noise(N, horizon, epsilon_d)
         new_alpha, state_traj_iterative = get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, args) #, noise)
         if new_alpha == alpha:
@@ -311,7 +313,7 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
     end_time = time.time()
     total_time = end_time - start_time
 
-    return alpha, total_time, state_traj_iterative
+    return alpha, total_time, state_traj_iterative, total_num_samples
 
 def visualize_set(alpha, epsilon_x, policy, slice = None):
     """
@@ -418,7 +420,7 @@ def main(visualize=False):
     M = 7 # max iterations
     horizon = 30
 
-    alpha, total_time, state_traj_iterative = solve_iterative_method(env, eps, delt, M, horizon, policy, args, alpha_init=-np.inf)
+    alpha, total_time, state_traj_iterative, _ = solve_iterative_method(env, eps, delt, M, horizon, policy, args, alpha_init=-np.inf)
     print(f"Final alpha: {alpha:.4f}, Total time: {total_time:.2f} seconds")
     if visualize:
         epsilon_x = 0.1 # coarseness of grid for visualization
