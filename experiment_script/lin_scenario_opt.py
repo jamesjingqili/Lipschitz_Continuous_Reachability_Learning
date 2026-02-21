@@ -5,6 +5,7 @@ sys.path.append(
 import os
 import gymnasium as gym
 import numpy as np
+import scipy
 import torch
 import time
 
@@ -24,6 +25,18 @@ from matplotlib import cm
 
 def make_new_env(args):
     return gym.make(args.task)
+
+# Code drawn from Albert Lin (https://github.com/albertklin/conformal_prediction_verification/blob/main/run_verification.py)
+# Lemma 5, Lin & Bansal 2024
+def find_eps_lemma5(N, k, beta):
+    # N: number of calibration points
+    # k: number of violations in calibration set
+    # eps: safety violation parameter
+    # beta: confidence parameter
+    eps_candidates = np.linspace(start=0, stop=1, num=int(1e3))
+    beta_candidates = scipy.special.bdtr(k, N, eps_candidates)
+    eps = eps_candidates[np.argmax(beta_candidates <= beta)]
+    return eps
 
 def compute_min_scenarios_alex(epsilon, delta, d):
     """
@@ -112,70 +125,6 @@ def sample_init_cond(N, alpha, policy, rng, model_dim, range_x,
             V_values_final = np.hstack(V_values_final)[:N]
             have_sufficient = True
 
-    '''
-    ego_vx = 0.0
-    ego_vy = 0.7 # previous 0.8 ##0.2 ebonye/jingqi
-    ego_z = 0.0
-    ego_vz = 0.0
-
-    ad_x = 0.4
-    ad_vx = 0.0
-    ad_y = -2.2
-    ad_vy = 0.3
-    ad_z = 0.0
-    ad_vz = 0.0
-
-    init_cond_final = []
-    V_values_final = []
-    have_sufficient = False
-    try_N = N * 10
-    while not have_sufficient:
-        
-        x01 = rng.uniform(-0.9, 0.9, size=(try_N, 1))
-        ego_vx1 = rng.uniform(0, 0.1, size=(try_N, 1))
-        y01 = rng.uniform(-2.6, -0.0, size=(try_N, 1))
-        ego_vy1 = rng.uniform(0.6, 0.8, size=(try_N, 1))
-        z01 = rng.uniform(0, 0.1, size=(try_N, 1))
-        ego_vz1 = rng.uniform(0, 0.1, size=(try_N, 1))
-        
-        # ad_x1 = np.random.uniform(0.3, 0.5, size=(N, 1))
-        # ad_vx1 = np.random.uniform(0, 0.1, size=(N, 1))
-        # ad_y1 = np.random.uniform(-2.3, -2.1, size=(N, 1))
-        # ad_vy1 = np.random.uniform(0.2, 0.4, size=(N, 1))
-        # ad_z1 = np.random.uniform(0, 0.1, size=(N, 1))
-        # ad_vz1 = np.random.uniform(0, 0.1, size=(N, 1))
-        
-        ad_x1 = np.full((try_N, 1), ad_x)
-        ad_vx1 = np.full((try_N, 1), ad_vx)
-        ad_y1 = np.full((try_N, 1), ad_y)
-        ad_vy1 = np.full((try_N, 1), ad_vy)
-        ad_z1 = np.full((try_N, 1), ad_z)
-        ad_vz1 = np.full((try_N, 1), ad_vz)
-
-        init_cond = np.hstack((x01, ego_vx1,
-                               y01, ego_vy1,
-                               z01, ego_vz1,
-                               ad_x1, ad_vx1,
-                               ad_y1, ad_vy1,
-                               ad_z1, ad_vz1))
-        
-        # Check if the sampled initial conditions satisfy the reach-avoid constraints
-        # Use evaluate_V to check the value function
-        V_values = evaluate_V_batch(init_cond, policy)
-        # Append init cond where V_values > alpha
-        valid_indices = np.where(V_values > alpha)[0]
-        init_cond_final.append(init_cond[valid_indices])
-        V_values_final.append(V_values[valid_indices])
-        
-        # if len(init_cond_final) >= N:
-        total_samps = sum(arr.shape[0] for arr in init_cond_final)
-        if total_samps >= N:
-            init_cond_final = np.vstack(init_cond_final)[:N]
-            V_values_final = np.hstack(V_values_final)[:N]
-            have_sufficient = True
-        
-    '''
-
     return init_cond_final, V_values_final
 
 def sample_noise(N, horizon, epsilon_d):
@@ -185,7 +134,6 @@ def sample_noise(N, horizon, epsilon_d):
     # Sample noise vectors uniformly in the disturbance space
     noise = np.random.uniform(-epsilon_d, epsilon_d, size=(N, horizon, 3))
     return noise
-
 
 
 def reach_avoid_measure_vectorized(envv, horizon, init_cond_final, V_values, policy, args):
@@ -215,8 +163,8 @@ def reach_avoid_measure_vectorized(envv, horizon, init_cond_final, V_values, pol
         actions = np.concatenate((acts[:, :3], np.zeros((num_samples, 3))), axis=1)  # assuming no noise in action for now
         states, rew, done, _, info = envs.step(actions)
         state_trajs[:, :, t+1] = states
-        rewards[:, t] = rew
-        constraints[:, t] = info['constraint']
+        rewards[:, t] = rew * args.gamma**t
+        constraints[:, t] = info['constraint'] * args.gamma**t
 
     min_constraints = np.minimum.accumulate(constraints, axis=1)
     reach_avoid_measures = np.max(np.minimum(rewards, min_constraints), axis=1)
@@ -259,10 +207,6 @@ def reach_avoid_measure(env, horizon, init_cond_final, V_values):
 
     return reach_avoid_measures
 
-
-
-    
-
 def get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, args) : #, noise):
     """
     Get a new alpha value based on the sampled initial conditions and their corresponding V values
@@ -274,6 +218,8 @@ def get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, 
 
     # import pdb; pdb.set_trace()
 
+    num_safety_violations = np.sum(reach_avoid_measures < 0)
+
     if np.any(reach_avoid_measures < 0):
         # If any reach-avoid measure is negative, we need to adjust alpha
         new_alpha = np.max(V_values_final[reach_avoid_measures < 0])
@@ -281,7 +227,7 @@ def get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, 
         # If all reach-avoid measures are non-negative, we can keep the current alpha
         new_alpha = alpha
 
-    return new_alpha, state_trajs_iterative
+    return new_alpha, state_trajs_iterative, num_safety_violations
 
 def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
                             rng, range_x, ego_setting, adv_setting, 
@@ -296,6 +242,7 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
     
     start_time = time.time()
     total_num_samples = 0
+    total_num_safety_violations = 0
     for j in range(M):
         init_cond_final, V_values_final = sample_init_cond(N, alpha, policy, rng, dim,
                                                             range_x, ego_setting, 
@@ -303,7 +250,13 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
         print(init_cond_final.shape)
         total_num_samples += len(init_cond_final)
         # noise = sample_noise(N, horizon, epsilon_d)
-        new_alpha, state_traj_iterative = get_new_alpha(env, init_cond_final, V_values_final, alpha, horizon, policy, args) #, noise)
+        new_alpha, state_traj_iterative, num_safety_violations = \
+            get_new_alpha(env, init_cond_final, V_values_final, alpha, 
+                        horizon, policy, args) #, noise)
+        total_num_safety_violations += num_safety_violations
+        # epss = find_eps_lemma5(total_num_samples, total_num_safety_violations, delt)
+        # print(f"Iteration {j+1}/{M}, Robust safety strength epsilon: {epss}")
+        # print("N: ", total_num_samples, "k: ", total_num_safety_violations)
         if new_alpha == alpha:
             print(f"Converged at iteration {j+1}/{M}, alpha: {alpha:.4f}")
             break
@@ -313,7 +266,23 @@ def solve_iterative_method(env, eps, delt, M, horizon, policy, dim, args,
     end_time = time.time()
     total_time = end_time - start_time
 
-    return alpha, total_time, state_traj_iterative, total_num_samples
+    return alpha, total_time, state_traj_iterative, total_num_samples, \
+            total_num_safety_violations
+
+def robust_scenario_opt(N, alpha, delt, policy, dim, env, args,
+                        rng, horizon, range_x, ego_setting, adv_setting):
+    # Given N and given a volume (alpha level), find the safety level epsilon.
+    init_cond_final, V_values_final = sample_init_cond(N, alpha, policy, rng, dim,
+                                                            range_x, ego_setting, 
+                                                            adv_setting)
+    total_num_samples = len(init_cond_final)
+    reach_avoid_measures, _ = reach_avoid_measure_vectorized(env, \
+                            horizon, init_cond_final, V_values_final, policy, args)
+    num_safety_violations = np.sum(reach_avoid_measures < 0)
+
+    epss = find_eps_lemma5(total_num_samples, num_safety_violations, delt)
+
+    return epss, total_num_samples, num_safety_violations
 
 def visualize_set(alpha, epsilon_x, policy, slice = None):
     """
@@ -420,7 +389,9 @@ def main(visualize=False):
     M = 7 # max iterations
     horizon = 30
 
-    alpha, total_time, state_traj_iterative, _ = solve_iterative_method(env, eps, delt, M, horizon, policy, args, alpha_init=-np.inf)
+    alpha, total_time, state_traj_iterative, _, _ = \
+        solve_iterative_method(env, eps, delt, M, horizon, policy, \
+                            args, alpha_init=-np.inf)
     print(f"Final alpha: {alpha:.4f}, Total time: {total_time:.2f} seconds")
     if visualize:
         epsilon_x = 0.1 # coarseness of grid for visualization
