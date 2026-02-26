@@ -23,7 +23,8 @@ from gymnasium.vector.utils import concatenate
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task', type=str, default='ra_droneracing_Game-v6')
+    # parser.add_argument('--task', type=str, default='ra_droneracing_Game-v6')
+    parser.add_argument('--task', type=str, default='ra_turbulence_cone_Game-v0')
     parser.add_argument('--reward-threshold', type=float, default=None)
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--buffer-size', type=int, default=40000)
@@ -252,11 +253,14 @@ def find_a(state, policy):
     act = policy.map_action(tmp).cpu().detach().numpy().flatten()
     return act
 
-def find_a_batch(states, policy):
+def find_a_batch(states, policy, env=None):
     tmp_obs = np.array(states)
     tmp_batch = Batch(obs = tmp_obs, info = Batch())
     tmp = policy(tmp_batch, model = "actor_old").act
     act = policy.map_action(tmp).cpu().detach().numpy() #.flatten()
+    if env is not None:
+        cone = env.cone_constraint(states)
+        act = act * (cone <= 0) # If you enter the cone, return 0 action
     return act
 
 def evaluate_V(state, policy):
