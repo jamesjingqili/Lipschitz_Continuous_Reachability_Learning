@@ -167,8 +167,7 @@ def reach_avoid_measure_vectorized(envv, horizon, init_cond_final, V_values, pol
         constraints[:, t] = info['constraint'] * args.gamma**t
 
     min_constraints = np.minimum.accumulate(constraints, axis=1)
-    # reach_avoid_measures = np.max(np.minimum(rewards, min_constraints), axis=1)
-    reach_avoid_measures = np.max(min_constraints)
+    reach_avoid_measures = np.max(np.minimum(rewards, min_constraints), axis=1)
     state_trajs_iterative = state_trajs
     return reach_avoid_measures, state_trajs_iterative
     
