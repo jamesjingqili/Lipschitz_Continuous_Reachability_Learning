@@ -23,8 +23,8 @@ from gymnasium.vector.utils import concatenate
 
 def get_args():
     parser = argparse.ArgumentParser()
-    # parser.add_argument('--task', type=str, default='ra_droneracing_Game-v6')
-    parser.add_argument('--task', type=str, default='ra_turbulence_cone_Game-v0')
+    parser.add_argument('--task', type=str, default='ra_droneracing_Game-v6')
+    # parser.add_argument('--task', type=str, default='ra_turbulence_cone_Game-v0')
     parser.add_argument('--reward-threshold', type=float, default=None)
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--buffer-size', type=int, default=40000)
