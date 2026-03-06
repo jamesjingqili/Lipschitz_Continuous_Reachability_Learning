@@ -122,7 +122,8 @@ def sample_init_cond(N, alpha, policy, rng, model_dim, range_x,
         total_samps = sum(arr.shape[0] for arr in init_cond_final)
         if total_samps >= N:
             init_cond_final = np.vstack(init_cond_final)[:N]
-            V_values_final = np.hstack(V_values_final)[:N]
+            # V_values_final = np.hstack(V_values_final)[:N]
+            V_values_final = np.vstack(V_values_final)[:N]
             have_sufficient = True
 
     return init_cond_final, V_values_final
