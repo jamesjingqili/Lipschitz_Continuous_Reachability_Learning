@@ -1,10 +1,8 @@
 import sys 
-sys.path.append(
-    '/Users/sampada/Documents/Research/Bayesian_Optimization/code/bayes_opt_calibration/')
+import os
+sys.path.append(os.getcwd())
 
 import argparse
-import os
-
 import gymnasium as gym
 import numpy as np
 import torch
