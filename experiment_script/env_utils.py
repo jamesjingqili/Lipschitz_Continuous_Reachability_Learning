@@ -60,7 +60,47 @@ def get_args():
     parser.add_argument('--critic-activation', type=str, default='ReLU')
     parser.add_argument('--kwargs', type=str, default='{}')
     args = parser.parse_known_args()[0]
-    return args    
+    return args 
+
+def get_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--task', type=str, default='ra_droneracing_Game-v6')
+    # parser.add_argument('--task', type=str, default='ra_turbulence_cone_Game-v0')
+    parser.add_argument('--reward-threshold', type=float, default=None)
+    parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--buffer-size', type=int, default=40000)
+    parser.add_argument('--actor-lr', type=float, default=1e-4)
+    parser.add_argument('--critic-lr', type=float, default=1e-3)
+    parser.add_argument('--gamma', type=float, default=0.95)
+    parser.add_argument('--tau', type=float, default=0.005)
+    parser.add_argument('--exploration-noise', type=float, default=0.1)
+    parser.add_argument('--epoch', type=int, default=10)
+    parser.add_argument('--total-episodes', type=int, default=160)
+    parser.add_argument('--step-per-epoch', type=int, default=40000)
+    parser.add_argument('--step-per-collect', type=int, default=8)
+    parser.add_argument('--update-per-step', type=float, default=0.125)
+    parser.add_argument('--batch-size', type=int, default=512)
+    parser.add_argument('--control-net', type=int, nargs='*', default=[512, 512, 512, 512]) # for control policy
+    parser.add_argument('--disturbance-net', type=int, nargs='*', default=[512, 512, 512, 512]) # for disturbance policy
+    parser.add_argument('--critic-net', type=int, nargs='*', default=[512, 512, 512, 512]) # for critic net
+    parser.add_argument('--training-num', type=int, default=8)
+    parser.add_argument('--test-num', type=int, default=100)
+    parser.add_argument('--logdir', type=str, default='log')
+    parser.add_argument('--render', type=float, default=0.)
+    parser.add_argument('--rew-norm', action="store_true", default=False)
+    parser.add_argument('--n-step', type=int, default=1)
+    parser.add_argument('--continue-training-logdir', type=str, default=None)
+    parser.add_argument('--continue-training-epoch', type=int, default=None)
+    parser.add_argument('--actor-gradient-steps', type=int, default=1)
+    parser.add_argument('--is-game-baseline', type=bool, default=False) # True -> classical approximated reach-avoid Bellman equation, False -> our new Reach-RL Bellman equation
+    parser.add_argument('--target-update-freq', type=int, default=400)
+    parser.add_argument(
+        '--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu'
+    )
+    parser.add_argument('--actor-activation', type=str, default='ReLU')
+    parser.add_argument('--critic-activation', type=str, default='ReLU')
+    parser.add_argument('--kwargs', type=str, default='{}')
+    return parser    
 
 def get_env_and_policy(args, epoch_id=100, pretrained=True):
     env = gym.make(args.task)
